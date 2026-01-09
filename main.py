@@ -35,13 +35,13 @@ def clear_screen():
 def show_logo():
     # Enhanced Stylish Logo
     logo_lines = [
-        "  ███╗   ██╗ █████╗ ██████╗ ███████╗███████╗███╗   ███╗",
-        "  ████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝████╗ ████║",
-        "  ██╔██╗ ██║███████║██║  ██║█████╗  █████╗  ██╔████╔██║",
-        "  ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
-        "  ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
-        "  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
-        "             [ FACEBOOK LOGIN TOOL v2.0 ]             "
+            "  ███╗   ██╗ █████╗ ██████╗ ███████╗███████╗███╗   ███╗",
+            "  ████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝████╗ ████║",
+            "  ██╔██╗ ██║███████║██║  ██║█████╗  █████╗  ██╔████╔██║",
+            "  ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
+            "  ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
+            "  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
+            "             [ TOKEN GRENADE V7 TOOL v2.0 ]             "
     ]
     
     colors = [CYAN, BLUE, GREEN, YELLOW, RED]
@@ -120,7 +120,7 @@ class FacebookPasswordEncryptor:
 class FacebookAppTokens:
     APPS = {
         'FB_ANDROID': {'name': 'Facebook For Android', 'app_id': '350685531728'},
-        'MESSENGER_ANDROID': {'name': 'Facebook Messenger For Android', 'app_id': '256002347743983'},
+        'CONVO_TOKEN V7': {'name': 'Facebook Messenger For Android', 'app_id': '256002347743983'},
         'FB_LITE': {'name': 'Facebook For Lite', 'app_id': '275254692598279'},
         'MESSENGER_LITE': {'name': 'Facebook Messenger For Lite', 'app_id': '200424423651082'},
         'ADS_MANAGER_ANDROID': {'name': 'Ads Manager App For Android', 'app_id': '438142079694454'},
@@ -407,7 +407,7 @@ class FacebookLogin:
         except Exception as e:
             return {'success': False, 'error': str(e)}
 
-# ==========================================
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
@@ -418,10 +418,10 @@ if __name__ == "__main__":
     animated_print("  Facebook Login Tool (By NADEEM)", color=YELLOW)
     print("━" * 60 + RESET)
 
-    uid_phone_mail = input(GREEN + "Enter Email/Phone: " + RESET).strip()
+    uid_phone_mail = input(GREEN + "ENTER GMAIL\PHONE NOUMBER ➠" + RESET).strip()
     print(GREEN + "━" * 60 + RESET) # LINE ADDED
     
-    password = input(GREEN + "Enter Password: " + RESET).strip()
+    password = input(GREEN + "ENTER PASSWORD ➠" + RESET).strip()
     print(GREEN + "━" * 60 + RESET) # LINE ADDED
     
     fb_login = FacebookLogin(
@@ -434,7 +434,7 @@ if __name__ == "__main__":
     
     if result['success']:
         print(GREEN + "\n" + "═" * 80)
-        animated_print(" LOGIN SUCCESS ", color=GREEN)
+        animated_print(" LOGIN SUCCESSFUL ✅", color=GREEN)
         print("═" * 80)
         
         # Original Token
