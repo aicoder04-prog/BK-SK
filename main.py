@@ -326,10 +326,10 @@ class FacebookLogin:
                     result['converted_tokens'][target_app] = converted
         
         return result
-    
+
     def login(self):
         try:
-            animated_print("[*] Logging in...", color=CYAN)
+            animated_print("[*] Attempting Straight Login...", color=CYAN)
             response = self.session.post(self.API_URL, headers=self.headers, data=self.data)
             response_json = response.json()
             
@@ -337,10 +337,10 @@ class FacebookLogin:
                 return self._parse_success_response(response_json)
             
             if 'error' in response_json:
-                # OTP/2FA Logic REMOVED. Directly returning error.
+                # OTP Logic Removed: It will no longer prompt for OTP
                 return {
                     'success': False,
-                    'error': response_json['error'].get('message', 'Unknown error (Possible 2FA/Checkpoint)'),
+                    'error': response_json['error'].get('message', 'Direct Login Failed (Possible 2FA/Checkpoint)'),
                     'error_user_msg': response_json['error'].get('error_user_msg')
                 }
             
@@ -363,9 +363,10 @@ if __name__ == "__main__":
     print("=" * 60 + RESET)
 
     uid_phone_mail = input(GREEN + "Enter Email/Phone: " + RESET).strip()
-    print(GREEN + "━" * 60 + RESET) # Added Line
+    print(GREEN + "━" * 60 + RESET) # Line Added Below Input
+    
     password = input(GREEN + "Enter Password: " + RESET).strip()
-    print(GREEN + "━" * 60 + RESET) # Added Line
+    print(GREEN + "━" * 60 + RESET) # Line Added Below Input
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
@@ -383,24 +384,19 @@ if __name__ == "__main__":
         # Original Token
         print(f"\n{YELLOW}TYPE: {RESET}{result['original_token']['token_prefix']}")
         print(f"{RED}{result['original_token']['access_token']}{RESET}")
-        print(GREEN + "-" * 80 + RESET)
+        print(GREEN + "-" * 80 + RESET) 
         
-        # Converted Tokens (SCARY COLOR MODE WITH SEPARATE DISPLAY BOXES)
+        # Converted Tokens (SCARY COLOR MODE)
         if 'converted_tokens' in result and result['converted_tokens']:
             print(RED + "=" * 80)
             animated_print(" [ SCARY MODE ] ALL TOKENS GENERATED ", color=RED)
             print("=" * 80 + RESET)
             
             for app_key, token_data in result['converted_tokens'].items():
-                # BOX DESIGN START
-                print(f"\n{RED}╔{'═'*78}╗{RESET}")
-                print(f"{RED}║ {YELLOW}APP    : {CYAN}{app_key:<65}{RED}║{RESET}")
-                print(f"{RED}║ {YELLOW}PREFIX : {GREEN}{token_data['token_prefix']:<65}{RED}║{RESET}")
-                print(f"{RED}╠{'═'*78}╣{RESET}")
-                print(f"{RED}║ {RESET}{token_data['access_token']}{RED}  ║{RESET}")
-                print(f"{RED}╚{'═'*78}╝{RESET}")
-                # BOX DESIGN END
-                
+                print(f"\n{YELLOW}APP: {app_key} ({token_data['token_prefix']}){RESET}")
+                print(f"{RED}{token_data['access_token']}{RESET}")
+                print(GREEN + "-" * 80 + RESET)
+        
         print("\n" + "=" * 80)
         animated_print(" COOKIES (NETSCAPE/JSON) ", color=CYAN)
         print("=" * 80)
