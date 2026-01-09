@@ -52,7 +52,7 @@ def show_logo():
             "     ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
             "     ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
             "     ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
-            "             [ TOKEN GRENADE V7 TOOL v2.0 ]             "
+            "                [ TOKEN GRENADE V7 TOOL v2.0 ]             "
     ]
     
     colors = [CYAN, BLUE, GREEN, YELLOW, RED]
@@ -60,7 +60,7 @@ def show_logo():
         color = random.choice(colors)
         print(color + BOLD + line + RESET)
         time.sleep(0.05)
-    print(GREEN + "█" * 65 + RESET)
+    print(GREEN + "═" * 60 + RESET)
 
 # ==========================================
 # CRYPTO CHECK
@@ -340,16 +340,16 @@ class FacebookLogin:
         return result
     
     def _handle_2fa_manual(self, error_data):
-        print(RED + "\n" + "█" * 65)
+        print(RED + "\n" + "═" * 60)
         animated_print("[!] 2FA REQUIRED (TWO-FACTOR AUTHENTICATION)", color=YELLOW)
-        print("█" * 65)
+        print("═" * 60)
         animated_print("Facebook has sent an OTP to your WhatsApp/Mobile Number.", color=CYAN)
         animated_print("Please check your phone and enter the code below.", color=CYAN)
-        print("█" * 65 + RESET)
+        print("═" * 60 + RESET)
         
         try:
             otp_code = input(YELLOW + "Enter OTP Code: " + RESET).strip()
-            print(GREEN + "█" * 65 + RESET)
+            print(GREEN + "═" * 60 + RESET)
         except KeyboardInterrupt:
             return {'success': False, 'error': 'User cancelled OTP input'}
 
@@ -426,15 +426,15 @@ if __name__ == "__main__":
     clear_screen()
     show_logo()
     
-    print(GREEN + "█" * 65)
+    print(GREEN + "═" * 60)
     animated_print("  Facebook Login Tool (By NADEEM)", color=YELLOW)
-    print("█" * 65 + RESET)
+    print("═" * 60 + RESET)
 
     uid_phone_mail = input(GREEN + "ENTER GMAIL\PHONE NOUMBER➠ "  + RESET).strip()
-    print(GREEN + "█" * 65 + RESET) 
+    print(GREEN + "═" * 60 + RESET) 
     
     password = input(GREEN + "ENTER PASSWORD➠ "  + RESET).strip()
-    print(GREEN + "█" * 65 + RESET) 
+    print(GREEN + "═" * 60 + RESET) 
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
@@ -445,35 +445,35 @@ if __name__ == "__main__":
     result = fb_login.login()
     
     if result['success']:
-        print(GREEN + "\n" + "█" * 65)
+        print(GREEN + "\n" + "═" * 60)
         animated_print(" LOGIN SUCCESSFUL ✅", color=GREEN)
-        print("█" * 65)
+        print("═" * 60)
         
         print(f"\n{YELLOW}TYPE: {RESET}{result['original_token']['token_prefix']}")
         print(f"{GREEN}{result['original_token']['access_token']}{RESET}")
-        print(GREEN + "█" * 65 + RESET) 
+        print(GREEN + "═" * 60 + RESET) 
         
         if 'converted_tokens' in result and result['converted_tokens']:
-            print(CYAN + "█" * 65)
+            print(CYAN + "═" * 60)
             animated_print(" [ SUCCESS ] ALL TOKENS GENERATED ", color=CYAN)
-            print("█" * 65 + RESET)
+            print("═" * 60 + RESET)
             
             for app_key, token_data in result['converted_tokens'].items():
                 print(f"\n{YELLOW}APP: {app_key} ({token_data['token_prefix']}){RESET}")
                 print(f"{GREEN}{token_data['access_token']}{RESET}")
-                print(GREEN + "█" * 65 + RESET)
+                print(GREEN + "═" * 60+ RESET)
         
-        print("\n" + "█" * 65)
+        print("\n" + "═" * 60)
         animated_print(" COOKIES (NETSCAPE/JSON) ", color=CYAN)
-        print("█" * 65)
+        print("═" * 60)
         print(f"{YELLOW}{result['cookies']['string']}{RESET}")
-        print(GREEN + "█" * 65 + RESET)
+        print(GREEN + "═" * 60 + RESET)
         
     else:
-        print(RED + "\n" + "█" * 65)
+        print(RED + "\n" + "═" * 60)
         animated_print(" LOGIN FAILED ", color=RED)
-        print("█" * 65)
+        print("═" * 60)
         animated_print(f"Error: {result.get('error')}", color=YELLOW)
         if result.get('error_user_msg'):
             animated_print(f"Message: {result.get('error_user_msg')}", color=YELLOW)
-        print(GREEN + "█" * 65 + RESET)
+        print(GREEN + "═" * 60 + RESET)
