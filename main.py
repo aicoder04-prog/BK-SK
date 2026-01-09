@@ -9,14 +9,43 @@ import io
 import struct
 import sys
 
+# Color and Animation Helper
+GREEN = "\033[92m"
+RESET = "\033[0m"
+BOLD = "\033[1m"
+
+def animated_print(text, delay=0.01):
+    """Prints text with a typewriter animation effect in green."""
+    for char in text:
+        sys.stdout.write(GREEN + char + RESET)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def clear_screen():
+    sys.stdout.write("\x1b[2J\x1b[H")
+
+def show_logo():
+    logo = f"""
+{BOLD}{GREEN}
+  _   _    _    ____  _____ _____ __  __ 
+ | \ | |  / \  |  _ \| ____| ____|  \/  |
+ |  \| | / _ \ | | | |  _| |  _| | |\/| |
+ | |\  |/ ___ \| |_| | |___| |___| |  | |
+ |_| \_/_/   \_\____/|_____|_____|_|  |_|
+{RESET}
+          {BOLD}FACEBOOK LOGIN TOOL{RESET}
+    """
+    print(logo)
+
 # Crypto libraries check
 try:
     from Crypto.Cipher import AES, PKCS1_v1_5
     from Crypto.PublicKey import RSA
     from Crypto.Random import get_random_bytes
 except ImportError:
-    print("Error: 'pycryptodome' module not found.")
-    print("Run: pip install pycryptodome")
+    print(f"{GREEN}Error: 'pycryptodome' module not found.{RESET}")
+    print(f"{GREEN}Run: pip install pycryptodome{RESET}")
     exit()
 
 class FacebookPasswordEncryptor:
@@ -281,23 +310,22 @@ class FacebookLogin:
         return result
     
     def _handle_2fa_manual(self, error_data):
-        print("\n" + "=" * 60)
-        print("[!] 2FA REQUIRED (TWO-FACTOR AUTHENTICATION)")
+        print(GREEN + "\n" + "=" * 60)
+        animated_print("[!] 2FA REQUIRED (TWO-FACTOR AUTHENTICATION)")
         print("=" * 60)
-        print("Facebook has sent an OTP to your WhatsApp/Mobile Number.")
-        print("Please check your phone and enter the code below.")
-        print("-" * 60)
+        animated_print("Facebook has sent an OTP to your WhatsApp/Mobile Number.")
+        animated_print("Please check your phone and enter the code below.")
+        print("-" * 60 + RESET)
         
-        # User input for OTP
         try:
-            otp_code = input("Enter OTP Code: ").strip()
+            otp_code = input(GREEN + "Enter OTP Code: " + RESET).strip()
         except KeyboardInterrupt:
             return {'success': False, 'error': 'User cancelled OTP input'}
 
         if not otp_code:
              return {'success': False, 'error': 'Empty OTP provided'}
 
-        print("\n[*] Verifying OTP...")
+        animated_print("[*] Verifying OTP...")
 
         try:
             data_2fa = {
@@ -308,7 +336,7 @@ class FacebookLogin:
                 'access_token': self.ACCESS_TOKEN,
                 'generate_session_cookies': 'true',
                 'generate_machine_id': '1',
-                'twofactor_code': otp_code,  # Use manual OTP
+                'twofactor_code': otp_code,
                 'credentials_type': 'two_factor',
                 'error_detail_type': 'button_with_disabled',
                 'first_factor': error_data['login_first_factor'],
@@ -333,7 +361,7 @@ class FacebookLogin:
     
     def login(self):
         try:
-            print("[*] Logging in...")
+            animated_print("[*] Logging in...")
             response = self.session.post(self.API_URL, headers=self.headers, data=self.data)
             response_json = response.json()
             
@@ -343,7 +371,6 @@ class FacebookLogin:
             if 'error' in response_json:
                 error_data = response_json.get('error', {}).get('error_data', {})
                 
-                # Check for 2FA requirement
                 if 'login_first_factor' in error_data and 'uid' in error_data:
                     return self._handle_2fa_manual(error_data)
                 
@@ -362,50 +389,48 @@ class FacebookLogin:
 
 
 if __name__ == "__main__":
+    clear_screen()
+    show_logo()
     
-    print("=" * 60)
-    print("  Facebook Login Tool (With Manual 2FA)")
-    print("=" * 60)
+    print(GREEN + "=" * 60)
+    animated_print("  Facebook Login Tool (By NADEEM)")
+    print("=" * 60 + RESET)
 
-    # Input Credentials
-    uid_phone_mail = input("Enter Email/Phone: ").strip()
-    password = input("Enter Password: ").strip()
-    
-    # Optional: Machine ID (for avoiding checkpoints if you have it)
-    # machine_id = "_2KxZzOokdiTAQGEsqoFdRJk" 
+    uid_phone_mail = input(GREEN + "Enter Email/Phone: " + RESET).strip()
+    password = input(GREEN + "Enter Password: " + RESET).strip()
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
         password=password,
-        machine_id=None,
         convert_all_tokens=True
     )
     
     result = fb_login.login()
     
     if result['success']:
-        print("\n" + "=" * 80)
-        print("LOGIN SUCCESS")
+        print(GREEN + "\n" + "=" * 80)
+        animated_print("LOGIN SUCCESS")
         print("=" * 80)
-        print(f"Token Prefix: {result['original_token']['token_prefix']}")
-        print(f"Token: {result['original_token']['access_token']}\n")
+        animated_print(f"Token Prefix: {result['original_token']['token_prefix']}")
+        animated_print(f"Token: {result['original_token']['access_token']}\n")
         
         if 'converted_tokens' in result and result['converted_tokens']:
             print("=" * 80)
-            print("CONVERTED TOKENS")
+            animated_print("CONVERTED TOKENS")
             print("=" * 80)
             for app_key, token_data in result['converted_tokens'].items():
-                print(f"\n[{app_key}] {token_data['token_prefix']}:")
-                print(f"{token_data['access_token']}")
+                animated_print(f"\n[{app_key}] {token_data['token_prefix']}:")
+                print(token_data['access_token'])
         
         print("\n" + "=" * 80)
-        print("COOKIES")
+        animated_print("COOKIES")
         print("=" * 80)
-        print(result['cookies']['string'])
+        print(result['cookies']['string'] + RESET)
     else:
-        print("\n" + "=" * 80)
-        print("LOGIN FAILED")
+        print(GREEN + "\n" + "=" * 80)
+        animated_print("LOGIN FAILED")
         print("=" * 80)
-        print(f"Error: {result.get('error')}")
+        animated_print(f"Error: {result.get('error')}")
         if result.get('error_user_msg'):
-            print(f"Message: {result.get('error_user_msg')}")
+            animated_print(f"Message: {result.get('error_user_msg')}")
+        print(RESET)
