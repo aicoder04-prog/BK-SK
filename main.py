@@ -427,7 +427,7 @@ if __name__ == "__main__":
     show_logo()
     
     print(GREEN + "═" * 62)
-    animated_print("  CONVO V7 TOKEN GRENADE BY ALIYA×NADEEM", color=YELLOW)
+    animated_print("      CONVO V7 TOKEN GRENADE BY ALIYA×NADEEM", color=YELLOW)
     print("═" * 62 + RESET)
 
     uid_phone_mail = input(GREEN + "ENTER GMAIL\PHONE NOUMBER➠ "  + RESET).strip()
