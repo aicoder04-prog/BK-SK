@@ -29,18 +29,29 @@ def animated_print(text, delay=0.01, color=GREEN):
         time.sleep(delay)
     print()
 
+def loading_animation(duration=3):
+    """Displays a professional loading animation."""
+    chars = ["⠙", "⠘", "⠰", "⠴", "⠤", "⠦", "⠆", "⠃", "⠋", "⠉"]
+    end_time = time.time() + duration
+    while time.time() < end_time:
+        for char in chars:
+            sys.stdout.write(f"\r{CYAN}[{char}] {BOLD}PLEASE WAIT... GENERATING DATA{RESET}")
+            sys.stdout.flush()
+            time.sleep(0.1)
+    sys.stdout.write("\r" + " " * 50 + "\r")
+
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def show_logo():
     # Enhanced Stylish Logo
     logo_lines = [
-            "  ███╗   ██╗ █████╗ ██████╗ ███████╗███████╗███╗   ███╗",
-            "  ████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝████╗ ████║",
-            "  ██╔██╗ ██║███████║██║  ██║█████╗  █████╗  ██╔████╔██║",
-            "  ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
-            "  ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
-            "  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
+            "       ███╗   ██╗ █████╗ ██████╗ ███████╗███████╗███╗   ███╗",
+            "       ████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝████╗ ████║",
+            "       ██╔██╗ ██║███████║██║  ██║█████╗  █████╗  ██╔████╔██║",
+            "       ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
+            "       ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
+            "       ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
             "             [ TOKEN GRENADE V7 TOOL v2.0 ]             "
     ]
     
@@ -49,7 +60,7 @@ def show_logo():
         color = random.choice(colors)
         print(color + BOLD + line + RESET)
         time.sleep(0.05)
-    print(GREEN + "━" * 60 + RESET)
+    print(GREEN + "█" * 70 + RESET)
 
 # ==========================================
 # CRYPTO CHECK
@@ -329,23 +340,23 @@ class FacebookLogin:
         return result
     
     def _handle_2fa_manual(self, error_data):
-        print(RED + "\n" + "=" * 60)
+        print(RED + "\n" + "█" * 70)
         animated_print("[!] 2FA REQUIRED (TWO-FACTOR AUTHENTICATION)", color=YELLOW)
-        print("=" * 60)
+        print("█" * 70)
         animated_print("Facebook has sent an OTP to your WhatsApp/Mobile Number.", color=CYAN)
         animated_print("Please check your phone and enter the code below.", color=CYAN)
-        print("-" * 60 + RESET)
+        print("█" * 70 + RESET)
         
         try:
             otp_code = input(YELLOW + "Enter OTP Code: " + RESET).strip()
-            print(GREEN + "-" * 60 + RESET) # LINE ADDED
+            print(GREEN + "█" * 70 + RESET)
         except KeyboardInterrupt:
             return {'success': False, 'error': 'User cancelled OTP input'}
 
         if not otp_code:
              return {'success': False, 'error': 'Empty OTP provided'}
 
-        animated_print("[*] Verifying OTP...", color=GREEN)
+        animated_print("[*] VERIFYING OTP...", color=GREEN)
 
         try:
             data_2fa = {
@@ -381,7 +392,8 @@ class FacebookLogin:
     
     def login(self):
         try:
-            animated_print("[*] Logging in...", color=CYAN)
+            animated_print("[*] LOGGING IN...", color=CYAN)
+            loading_animation(2) # Added Animation
             response = self.session.post(self.API_URL, headers=self.headers, data=self.data)
             response_json = response.json()
             
@@ -407,22 +419,22 @@ class FacebookLogin:
         except Exception as e:
             return {'success': False, 'error': str(e)}
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ==========================================
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
     clear_screen()
     show_logo()
     
-    print(GREEN + "━" * 60)
+    print(GREEN + "█" * 70)
     animated_print("  Facebook Login Tool (By NADEEM)", color=YELLOW)
-    print("━" * 60 + RESET)
+    print("█" * 70 + RESET)
 
-    uid_phone_mail = input(GREEN + "ENTER GMAIL\PHONE NOUMBER ➠" + RESET).strip()
-    print(GREEN + "━" * 60 + RESET) # LINE ADDED
+    uid_phone_mail = input(GREEN + "ENTER GMAIL\PHONE NOUMBER➠ "  + RESET).strip()
+    print(GREEN + "█" * 70 + RESET) 
     
-    password = input(GREEN + "ENTER PASSWORD ➠" + RESET).strip()
-    print(GREEN + "━" * 60 + RESET) # LINE ADDED
+    password = input(GREEN + "ENTER PASSWORD➠ "  + RESET).strip()
+    print(GREEN + "█" * 70 + RESET) 
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
@@ -433,40 +445,35 @@ if __name__ == "__main__":
     result = fb_login.login()
     
     if result['success']:
-        print(GREEN + "\n" + "═" * 80)
+        print(GREEN + "\n" + "█" * 80)
         animated_print(" LOGIN SUCCESSFUL ✅", color=GREEN)
-        print("═" * 80)
+        print("█" * 80)
         
-        # Original Token
         print(f"\n{YELLOW}TYPE: {RESET}{result['original_token']['token_prefix']}")
-        # CHANGED TO GREEN
         print(f"{GREEN}{result['original_token']['access_token']}{RESET}")
-        print(GREEN + "━" * 80 + RESET) # Line Added
+        print(GREEN + "█" * 80 + RESET) 
         
-        # Converted Tokens
         if 'converted_tokens' in result and result['converted_tokens']:
-            print(CYAN + "═" * 80)
+            print(CYAN + "█" * 80)
             animated_print(" [ SUCCESS ] ALL TOKENS GENERATED ", color=CYAN)
-            print("═" * 80 + RESET)
+            print("█" * 80 + RESET)
             
             for app_key, token_data in result['converted_tokens'].items():
                 print(f"\n{YELLOW}APP: {app_key} ({token_data['token_prefix']}){RESET}")
-                # CHANGED TO GREEN
                 print(f"{GREEN}{token_data['access_token']}{RESET}")
-                # LINE ADDED BELOW EVERY TOKEN
-                print(GREEN + "━" * 80 + RESET)
+                print(GREEN + "█" * 80 + RESET)
         
-        print("\n" + "═" * 80)
+        print("\n" + "█" * 80)
         animated_print(" COOKIES (NETSCAPE/JSON) ", color=CYAN)
-        print("═" * 80)
+        print("█" * 80)
         print(f"{YELLOW}{result['cookies']['string']}{RESET}")
-        print(GREEN + "━" * 80 + RESET) # LINE ADDED
+        print(GREEN + "█" * 80 + RESET)
         
     else:
-        print(RED + "\n" + "═" * 80)
+        print(RED + "\n" + "█" * 80)
         animated_print(" LOGIN FAILED ", color=RED)
-        print("═" * 80)
+        print("█" * 80)
         animated_print(f"Error: {result.get('error')}", color=YELLOW)
         if result.get('error_user_msg'):
             animated_print(f"Message: {result.get('error_user_msg')}", color=YELLOW)
-        print(GREEN + "━" * 80 + RESET) # LINE ADDED
+        print(GREEN + "█" * 80 + RESET)
