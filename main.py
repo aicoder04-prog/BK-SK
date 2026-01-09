@@ -13,7 +13,7 @@ import os
 # ==========================================
 # COLORS AND STYLING
 # ==========================================
-RED = "\033[91m"      # SCARY COLOR
+RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
 BLUE = "\033[94m"
@@ -33,22 +33,23 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def show_logo():
-    logo_text = f"""
-  _   _    _    ____  _____ _____ __  __ 
- | \ | |  / \  |  _ \| ____| ____|  \/  |
- |  \| | / _ \ | | | |  _| |  _| | |\/| |
- | |\  |/ ___ \| |_| | |___| |___| |  | |
- |_| \_/_/   \_\____/|_____|_____|_|  |_|
-          {BOLD}FACEBOOK LOGIN TOOL{RESET}
-    """
+    # Enhanced Stylish Logo
+    logo_lines = [
+        "  ███╗   ██╗ █████╗ ██████╗ ███████╗███████╗███╗   ███╗",
+        "  ████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝████╗ ████║",
+        "  ██╔██╗ ██║███████║██║  ██║█████╗  █████╗  ██╔████╔██║",
+        "  ██║╚██╗██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║╚██╔╝██║",
+        "  ██║ ╚████║██║  ██║██████╔╝███████╗███████╗██║ ╚═╝ ██║",
+        "  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝",
+        "             [ FACEBOOK LOGIN TOOL v2.0 ]             "
+    ]
     
-    # Stylish Animation for Logo
-    colors = [RED, GREEN, YELLOW, CYAN, BLUE]
-    for line in logo_text.split('\n'):
+    colors = [CYAN, BLUE, GREEN, YELLOW, RED]
+    for line in logo_lines:
         color = random.choice(colors)
-        sys.stdout.write(color + line + "\n")
-        time.sleep(0.05) 
-    print(RESET)
+        print(color + BOLD + line + RESET)
+        time.sleep(0.05)
+    print(GREEN + "━" * 60 + RESET)
 
 # ==========================================
 # CRYPTO CHECK
@@ -63,7 +64,7 @@ except ImportError:
     exit()
 
 # ==========================================
-# CORE CLASSES
+# CORE CLASSES (Preserved Exactly)
 # ==========================================
 
 class FacebookPasswordEncryptor:
@@ -337,6 +338,7 @@ class FacebookLogin:
         
         try:
             otp_code = input(YELLOW + "Enter OTP Code: " + RESET).strip()
+            print(GREEN + "-" * 60 + RESET) # LINE ADDED
         except KeyboardInterrupt:
             return {'success': False, 'error': 'User cancelled OTP input'}
 
@@ -412,12 +414,15 @@ if __name__ == "__main__":
     clear_screen()
     show_logo()
     
-    print(GREEN + "=" * 60)
+    print(GREEN + "━" * 60)
     animated_print("  Facebook Login Tool (By NADEEM)", color=YELLOW)
-    print("=" * 60 + RESET)
+    print("━" * 60 + RESET)
 
     uid_phone_mail = input(GREEN + "Enter Email/Phone: " + RESET).strip()
+    print(GREEN + "━" * 60 + RESET) # LINE ADDED
+    
     password = input(GREEN + "Enter Password: " + RESET).strip()
+    print(GREEN + "━" * 60 + RESET) # LINE ADDED
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
@@ -428,39 +433,40 @@ if __name__ == "__main__":
     result = fb_login.login()
     
     if result['success']:
-        print(GREEN + "\n" + "=" * 80)
+        print(GREEN + "\n" + "═" * 80)
         animated_print(" LOGIN SUCCESS ", color=GREEN)
-        print("=" * 80)
+        print("═" * 80)
         
         # Original Token
         print(f"\n{YELLOW}TYPE: {RESET}{result['original_token']['token_prefix']}")
-        print(f"{RED}{result['original_token']['access_token']}{RESET}")
-        print(GREEN + "-" * 80 + RESET) # Line Added
+        # CHANGED TO GREEN
+        print(f"{GREEN}{result['original_token']['access_token']}{RESET}")
+        print(GREEN + "━" * 80 + RESET) # Line Added
         
-        # Converted Tokens (SCARY COLOR MODE)
+        # Converted Tokens
         if 'converted_tokens' in result and result['converted_tokens']:
-            print(RED + "=" * 80)
-            animated_print(" [ SCARY MODE ] ALL TOKENS GENERATED ", color=RED)
-            print("=" * 80 + RESET)
+            print(CYAN + "═" * 80)
+            animated_print(" [ SUCCESS ] ALL TOKENS GENERATED ", color=CYAN)
+            print("═" * 80 + RESET)
             
             for app_key, token_data in result['converted_tokens'].items():
                 print(f"\n{YELLOW}APP: {app_key} ({token_data['token_prefix']}){RESET}")
-                # PRINTING TOKEN IN SCARY RED COLOR
-                print(f"{RED}{token_data['access_token']}{RESET}")
+                # CHANGED TO GREEN
+                print(f"{GREEN}{token_data['access_token']}{RESET}")
                 # LINE ADDED BELOW EVERY TOKEN
-                print(GREEN + "-" * 80 + RESET)
+                print(GREEN + "━" * 80 + RESET)
         
-        print("\n" + "=" * 80)
+        print("\n" + "═" * 80)
         animated_print(" COOKIES (NETSCAPE/JSON) ", color=CYAN)
-        print("=" * 80)
+        print("═" * 80)
         print(f"{YELLOW}{result['cookies']['string']}{RESET}")
-        print(GREEN + "-" * 80 + RESET)
+        print(GREEN + "━" * 80 + RESET) # LINE ADDED
         
     else:
-        print(RED + "\n" + "=" * 80)
+        print(RED + "\n" + "═" * 80)
         animated_print(" LOGIN FAILED ", color=RED)
-        print("=" * 80)
+        print("═" * 80)
         animated_print(f"Error: {result.get('error')}", color=YELLOW)
         if result.get('error_user_msg'):
             animated_print(f"Message: {result.get('error_user_msg')}", color=YELLOW)
-        print(RESET)
+        print(GREEN + "━" * 80 + RESET) # LINE ADDED
