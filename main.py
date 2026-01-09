@@ -58,7 +58,7 @@ try:
     from Crypto.PublicKey import RSA
     from Crypto.Random import get_random_bytes
 except ImportError:
-    print(f"{RED}Error: 'pycryptodome' module not found.{RESET}")
+    print(f"{GREEN}Error: 'pycryptodome' module not found.{RESET}")
     print(f"{YELLOW}Run: pip install pycryptodome{RESET}")
     exit()
 
@@ -327,56 +327,6 @@ class FacebookLogin:
         
         return result
     
-    def _handle_2fa_manual(self, error_data):
-        print(RED + "\n" + "=" * 60)
-        animated_print("[!] 2FA REQUIRED (TWO-FACTOR AUTHENTICATION)", color=YELLOW)
-        print("=" * 60)
-        animated_print("Facebook has sent an OTP to your WhatsApp/Mobile Number.", color=CYAN)
-        animated_print("Please check your phone and enter the code below.", color=CYAN)
-        print("-" * 60 + RESET)
-        
-        try:
-            otp_code = input(YELLOW + "Enter OTP Code: " + RESET).strip()
-        except KeyboardInterrupt:
-            return {'success': False, 'error': 'User cancelled OTP input'}
-
-        if not otp_code:
-             return {'success': False, 'error': 'Empty OTP provided'}
-
-        animated_print("[*] Verifying OTP...", color=GREEN)
-
-        try:
-            data_2fa = {
-                'locale': 'vi_VN',
-                'format': 'json',
-                'email': self.uid_phone_mail,
-                'device_id': self.device_id,
-                'access_token': self.ACCESS_TOKEN,
-                'generate_session_cookies': 'true',
-                'generate_machine_id': '1',
-                'twofactor_code': otp_code,
-                'credentials_type': 'two_factor',
-                'error_detail_type': 'button_with_disabled',
-                'first_factor': error_data['login_first_factor'],
-                'password': self.password,
-                'userid': error_data['uid'],
-                'machine_id': error_data['login_first_factor']
-            }
-            
-            response = self.session.post(self.API_URL, data=data_2fa, headers=self.headers)
-            response_json = response.json()
-            
-            if 'access_token' in response_json:
-                return self._parse_success_response(response_json)
-            elif 'error' in response_json:
-                return {
-                    'success': False,
-                    'error': response_json['error'].get('message', 'OTP Verification Failed')
-                }
-            
-        except Exception as e:
-            return {'success': False, 'error': f'2FA Processing Error: {str(e)}'}
-    
     def login(self):
         try:
             animated_print("[*] Logging in...", color=CYAN)
@@ -387,14 +337,10 @@ class FacebookLogin:
                 return self._parse_success_response(response_json)
             
             if 'error' in response_json:
-                error_data = response_json.get('error', {}).get('error_data', {})
-                
-                if 'login_first_factor' in error_data and 'uid' in error_data:
-                    return self._handle_2fa_manual(error_data)
-                
+                # OTP/2FA Logic REMOVED. Directly returning error.
                 return {
                     'success': False,
-                    'error': response_json['error'].get('message', 'Unknown error'),
+                    'error': response_json['error'].get('message', 'Unknown error (Possible 2FA/Checkpoint)'),
                     'error_user_msg': response_json['error'].get('error_user_msg')
                 }
             
@@ -417,7 +363,9 @@ if __name__ == "__main__":
     print("=" * 60 + RESET)
 
     uid_phone_mail = input(GREEN + "Enter Email/Phone: " + RESET).strip()
+    print(GREEN + "━" * 60 + RESET) # Added Line
     password = input(GREEN + "Enter Password: " + RESET).strip()
+    print(GREEN + "━" * 60 + RESET) # Added Line
     
     fb_login = FacebookLogin(
         uid_phone_mail=uid_phone_mail,
@@ -435,21 +383,24 @@ if __name__ == "__main__":
         # Original Token
         print(f"\n{YELLOW}TYPE: {RESET}{result['original_token']['token_prefix']}")
         print(f"{RED}{result['original_token']['access_token']}{RESET}")
-        print(GREEN + "-" * 80 + RESET) # Line Added
+        print(GREEN + "-" * 80 + RESET)
         
-        # Converted Tokens (SCARY COLOR MODE)
+        # Converted Tokens (SCARY COLOR MODE WITH SEPARATE DISPLAY BOXES)
         if 'converted_tokens' in result and result['converted_tokens']:
             print(RED + "=" * 80)
             animated_print(" [ SCARY MODE ] ALL TOKENS GENERATED ", color=RED)
             print("=" * 80 + RESET)
             
             for app_key, token_data in result['converted_tokens'].items():
-                print(f"\n{YELLOW}APP: {app_key} ({token_data['token_prefix']}){RESET}")
-                # PRINTING TOKEN IN SCARY RED COLOR
-                print(f"{RED}{token_data['access_token']}{RESET}")
-                # LINE ADDED BELOW EVERY TOKEN
-                print(GREEN + "-" * 80 + RESET)
-        
+                # BOX DESIGN START
+                print(f"\n{RED}╔{'═'*78}╗{RESET}")
+                print(f"{RED}║ {YELLOW}APP    : {CYAN}{app_key:<65}{RED}║{RESET}")
+                print(f"{RED}║ {YELLOW}PREFIX : {GREEN}{token_data['token_prefix']:<65}{RED}║{RESET}")
+                print(f"{RED}╠{'═'*78}╣{RESET}")
+                print(f"{RED}║ {RESET}{token_data['access_token']}{RED}  ║{RESET}")
+                print(f"{RED}╚{'═'*78}╝{RESET}")
+                # BOX DESIGN END
+                
         print("\n" + "=" * 80)
         animated_print(" COOKIES (NETSCAPE/JSON) ", color=CYAN)
         print("=" * 80)
